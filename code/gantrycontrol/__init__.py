@@ -114,25 +114,25 @@ class Gantry:
         GPIO.cleanup()
 
 def setup_gantry(config_file):
-  parser = SafeConfigParser()
-	parser.read(config_file)
+    parser = SafeConfigParser()
+    parser.read(config_file)
 
-	XY_A = parser.get("XY-A")
-	XY_motorA = HR8825(int(XY_A["dir-pin"]), int(XY_A["step-pin"]), int(XY_A["enable-pin"]), (int(XY_A["mode-pin-1"]), int(XY_A["mode-pin-2"]), int(XY_A["mode-pin-3"])))
+    XY_A = parser.get("XY-A")
+    XY_motorA = HR8825(int(XY_A["dir-pin"]), int(XY_A["step-pin"]), int(XY_A["enable-pin"]), (int(XY_A["mode-pin-1"]), int(XY_A["mode-pin-2"]), int(XY_A["mode-pin-3"])))
 
-	XY_B = parser.get("XY-B")
-	XY_motorB = HR8825(int(XY_B["dir-pin"]), int(XY_B["step-pin"]), int(XY_B["enable-pin"]), (int(XY_B["mode-pin-1"]), int(XY_B["mode-pin-2"]), int(XY_B["mode-pin-3"])))
+    XY_B = parser.get("XY-B")
+    XY_motorB = HR8825(int(XY_B["dir-pin"]), int(XY_B["step-pin"]), int(XY_B["enable-pin"]), (int(XY_B["mode-pin-1"]), int(XY_B["mode-pin-2"]), int(XY_B["mode-pin-3"])))
 
-	Z = parser.get("Z")
-	Z_motor = L298N((int(Z["pin-1"]), int(Z["pin-2"]), int(Z["pin-3"]), int(Z["pin-4"])), int(Z["enable-pin"]))
+    Z = parser.get("Z")
+    Z_motor = L298N((int(Z["pin-1"]), int(Z["pin-2"]), int(Z["pin-3"]), int(Z["pin-4"])), int(Z["enable-pin"]))
 
-	endstop_conf = parser.get("endstops")
-	endstops = EndStops(int(endstop_conf["X"]), int(endstop_conf["Y"]), int(endstop_conf["Z"]))
+    endstop_conf = parser.get("endstops")
+    endstops = EndStops(int(endstop_conf["X"]), int(endstop_conf["Y"]), int(endstop_conf["Z"]))
 
-	limit_conf = parser.get("limits")
-	limits = Position(int(limit_conf["X"]), int(limit_conf["Y"]), int(limit_conf["Z"]))
+    limit_conf = parser.get("limits")
+    limits = Position(int(limit_conf["X"]), int(limit_conf["Y"]), int(limit_conf["Z"]))
 
-	cal = parser.get("calibration")
+    cal = parser.get("calibration")
 
-	gantry = Gantry(XY_motorA, XY_motorB, Z_motor, endstops, limits, (cal["XY"], cal["Z"]))
-	return gantry
+    gantry = Gantry(XY_motorA, XY_motorB, Z_motor, endstops, limits, (cal["XY"], cal["Z"]))
+    return gantry
