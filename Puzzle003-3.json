@@ -1,0 +1,21 @@
+{
+	"puzzle-size": [3, 3], 
+	"piece-size": [30, 30], 
+	"piece-height": 3, 
+	"offsets": [
+		[8, 0],
+		[8, 0],
+		[0, 0],
+		[0, 0],
+		[6, 0], 
+		[10, 0],
+		[7, 0],
+		[6, 0],
+		[0, 0]
+	], 
+	"arrangement": [
+		[{"id": 0, "rotation": 2}, {"id": 5, "index": 2, "rotation": 2, "contour": 84495.5, "image": 0}, {"id": 3, "index": 1, "rotation": 2, "contour": 239631.5, "image": 0}],
+		[{"id": 2, "index": 0, "rotation": 3, "contour": 180631.0, "image": 0}, {"id" : 6, "rotation" : 1}, {"id": 4, "index": 1, "rotation": 1, "contour": 56060.0, "image": 0}],
+		[{"id": 1, "index": 0, "rotation": 3, "contour": 48959.5, "image": 0}, {"id": 7, "index": 1, "rotation": 0, "contour": 32958.166666666664, "image": 0}, {"id": 8, "index": 1, "rotation": 2, "contour": 96547.5, "image": 0}]
+	]
+}

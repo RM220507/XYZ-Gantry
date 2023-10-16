@@ -3,7 +3,7 @@ class Position_2D:
         self.x = x
         self.y = y
 
-    def convert3D(self, z):
+    def convert3D(self, z=0):
         return Position(self.x, self.y, z)
 
 class Position:

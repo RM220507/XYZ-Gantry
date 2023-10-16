@@ -10,18 +10,32 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
 class Gantry:
-    def __init__(self, motorA, motorB, zmotor, endstops, limits, calibration):
-        self.XY_motorA = motorA
-        self.XY_motorB = motorB
-        self.Z_motor = zmotor
+    def __init__(self, config):
+        self.self.parser = SafeConfigParser()
+        self.self.parser.read(config)
 
-        self.endstops = endstops
-        self.limits = limits
+        XY_A = self.parser.get("XY-A")
+        self.XY_motorA = HR8825(int(XY_A["dir-pin"]), int(XY_A["step-pin"]), int(XY_A["enable-pin"]), (int(XY_A["mode-pin-1"]), int(XY_A["mode-pin-2"]), int(XY_A["mode-pin-3"])))
+
+        XY_B = self.parser.get("XY-B")
+        self.XY_motorB = HR8825(int(XY_B["dir-pin"]), int(XY_B["step-pin"]), int(XY_B["enable-pin"]), (int(XY_B["mode-pin-1"]), int(XY_B["mode-pin-2"]), int(XY_B["mode-pin-3"])))
+
+        Z = self.parser.get("Z")
+        self.Z_motor = L298N((int(Z["pin-1"]), int(Z["pin-2"]), int(Z["pin-3"]), int(Z["pin-4"])), int(Z["enable-pin"]))
+
+        endstop_conf = self.parser.get("endstops")
+        self.endstops = EndStops(int(endstop_conf["X"]), int(endstop_conf["Y"]), int(endstop_conf["Z"]))
+
+        limit_conf = self.parser.get("limits")
+        self.limits = Position(int(limit_conf["X"]), int(limit_conf["Y"]), int(limit_conf["Z"]))
+
+        self.calibration = self.parser.get("calibration")
+        
         self.center = self.limits.floor_div(2)
 
         self.homed = False
-        self.XY_steps_per_mm = calibration[0]
-        self.Z_steps_per_mm = calibration[1]
+        self.XY_steps_per_mm = self.calibration[0]
+        self.Z_steps_per_mm = self.calibration[1]
 
         self.XY_motorA.SetMicroStep("software", "fullstep")
         self.XY_motorB.SetMicroStep("software", "fullstep")
@@ -33,12 +47,14 @@ class Gantry:
         self.XY_motorB.Stop()
         self.Z_motor.Stop()
 
-    def goto(self, destination):
+    def goto(self, dest):
+        destination = dest.copy() # due to object interferencey things
         print("Go To: ", destination.x, destination.y, destination.z)
         destination.subtract(self.position)
         self.jog(destination)
 
-    def jog(self, distance):
+    def jog(self, dist):
+        distance = dist.copy() # due to object interferencey things
         print("Jog: ", distance.x, distance.y, distance.z)
         destination = self.position.copy()
         destination.add(distance)
@@ -112,27 +128,3 @@ class Gantry:
         self.XY_motorB.Stop()
 
         GPIO.cleanup()
-
-def setup_gantry(config_file):
-    parser = SafeConfigParser()
-    parser.read(config_file)
-
-    XY_A = parser.get("XY-A")
-    XY_motorA = HR8825(int(XY_A["dir-pin"]), int(XY_A["step-pin"]), int(XY_A["enable-pin"]), (int(XY_A["mode-pin-1"]), int(XY_A["mode-pin-2"]), int(XY_A["mode-pin-3"])))
-
-    XY_B = parser.get("XY-B")
-    XY_motorB = HR8825(int(XY_B["dir-pin"]), int(XY_B["step-pin"]), int(XY_B["enable-pin"]), (int(XY_B["mode-pin-1"]), int(XY_B["mode-pin-2"]), int(XY_B["mode-pin-3"])))
-
-    Z = parser.get("Z")
-    Z_motor = L298N((int(Z["pin-1"]), int(Z["pin-2"]), int(Z["pin-3"]), int(Z["pin-4"])), int(Z["enable-pin"]))
-
-    endstop_conf = parser.get("endstops")
-    endstops = EndStops(int(endstop_conf["X"]), int(endstop_conf["Y"]), int(endstop_conf["Z"]))
-
-    limit_conf = parser.get("limits")
-    limits = Position(int(limit_conf["X"]), int(limit_conf["Y"]), int(limit_conf["Z"]))
-
-    cal = parser.get("calibration")
-
-    gantry = Gantry(XY_motorA, XY_motorB, Z_motor, endstops, limits, (cal["XY"], cal["Z"]))
-    return gantry
