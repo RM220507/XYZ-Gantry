@@ -6,8 +6,8 @@ from RPi.GPIO import GPIO
 import time
 
 class PuzzleBuildingRobot(Gantry):
-    def __init__(self, motorA, motorB, zmotor, endstops, limits, calibration, servo, vacuum):
-        super().__init__(motorA, motorB, zmotor, endstops, limits, calibration)
+    def __init__(self, config):
+        super().__init__(config)
         
         pbr_data = self.parser.get("PuzzleBuildingRobot")
         self.servo = AngularServo(int(pbr_data["servo_pin"]), min_angle=0, max_angle=180, min_pulse_width=0.0003, max_pulse_width=0.0025)
@@ -154,3 +154,13 @@ class PuzzleBuildingRobot(Gantry):
             self.goto(Position(self.position.x, self.position.y, 0))
         else:
             print("Gantry Error: Cannot put down piece - destination surpasses limits")
+            
+    def addon_command_processing(self, command_list):
+        if command_list[0] == "load-arrangement":
+            self.load_arrangement(command_list[1])
+        elif command_list[0] == "load-pieces":
+            self.process_pieces()
+        elif command_list[0] == "assemble":
+            self.assemble_puzzle()
+        else:
+            print("Invalid command")

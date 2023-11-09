@@ -128,3 +128,29 @@ class Gantry:
         self.XY_motorB.Stop()
 
         GPIO.cleanup()
+        
+    def mainloop(self):
+        while True:
+            command = input("XYZ-Gantry >>> ")
+            command_list = command.split()
+            
+            try:
+                if command_list[0] == "jog":
+                    self.jog(Position(int(command_list[1]), int(command_list[2]), int(command_list[3])))
+                elif command_list[0] == "goto":
+                    if command_list[1] == "center":
+                        self.goto_center()
+                    else:
+                        self.goto(Position(int(command_list[1]), int(command_list[2]), int(command_list[3])))
+                elif command_list[0] == "home":
+                    self.home()
+                elif command_list[0] == "kill":
+                    self.kill()
+                    break
+                else:
+                    self.addon_command_processing(command_list)
+            except:
+                print("Command Error")
+                
+    def addon_command_processing(self, command_list):
+        print("Invalid command")
