@@ -1,9 +1,9 @@
-from HR8825 import HR8825
-from L298N import L298N
-from endstop import EndStops
-from position import Position, Position_2D
+from gantrycontrol.HR8825 import HR8825
+from gantrycontrol.L298N import L298N
+from gantrycontrol.endstop import EndStops
+from gantrycontrol.position import Position, Position_2D
 
-from attachments.puzzle_building import PuzzleBuildingRobot
+from gantrycontrol.attachments.puzzle_building import PuzzleBuildingRobot
 
 import RPi.GPIO as GPIO
 from ConfigParser import SafeConfigParser
