@@ -1,5 +1,5 @@
 from gantrycontrol.position import Position, Position_2D
-from gantrycontrol import Gantry
+from gantrycontrol.gantry import Gantry
 
 import json
 import os.path
