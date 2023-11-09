@@ -3,6 +3,8 @@ from L298N import L298N
 from endstop import EndStops
 from position import Position, Position_2D
 
+from attachments.puzzle_building import PuzzleBuildingRobot
+
 import RPi.GPIO as GPIO
 from ConfigParser import SafeConfigParser
 
