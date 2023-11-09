@@ -1,4 +1,6 @@
-from gantrycontrol import Gantry, Position, Position_2D
+from gantrycontrol.position import Position, Position_2D
+from gantrycontrol import Gantry
+
 import json
 import os.path
 from gpiozero import AngularServo
