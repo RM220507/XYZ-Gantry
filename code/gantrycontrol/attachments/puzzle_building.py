@@ -8,15 +8,16 @@ from RPi.GPIO import GPIO
 import time
 
 class PuzzleBuildingRobot(Gantry):
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self):
+        super().__init__()
+        self.servo = AngularServo(5, min_angle=0, max_angle=180, min_pulse_width=0.0003, max_pulse_width=0.0025)
         
-        pbr_data = self.parser.get("PuzzleBuildingRobot")
-        self.servo = AngularServo(int(pbr_data["servo_pin"]), min_angle=0, max_angle=180, min_pulse_width=0.0003, max_pulse_width=0.0025)
-        
-        self.vacuum = int(pbr_data["vacuum_pin"])
+        self.vacuum = 7
         GPIO.setup(self.vacuum, GPIO.OUT)
         GPIO.output(self.vacuum, GPIO.LOW)
+        
+        self.action_button = 11
+        GPIO.setup(self.action_button, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         
         self.arrangement = None
         self.pieces_processed = False
@@ -65,7 +66,10 @@ class PuzzleBuildingRobot(Gantry):
             self.goto(self.pickup_coordinates)
 
             print("Place Piece on guide and press ActionButton")
-            self.action_button.wait_for_press()
+            
+            while not GPIO.input(self.action_button):
+                continue
+            
             print("Input Recieved - Collecting Piece")
 
             # pickup point

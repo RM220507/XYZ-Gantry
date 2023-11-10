@@ -4,29 +4,20 @@ from gantrycontrol.endstop import EndStops
 from gantrycontrol.position import Position
 
 import RPi.GPIO as GPIO
-from ConfigParser import SafeConfigParser
 
 class Gantry:
-    def __init__(self, config):
-        self.self.parser = SafeConfigParser()
-        self.self.parser.read(config)
+    def __init__(self):
+        self.XY_motorA = HR8825(dir_pin=13, step_pin=19, enable_pin=12, mode_pins=(16, 17, 20))
 
-        XY_A = self.parser.get("XY-A")
-        self.XY_motorA = HR8825(int(XY_A["dir-pin"]), int(XY_A["step-pin"]), int(XY_A["enable-pin"]), (int(XY_A["mode-pin-1"]), int(XY_A["mode-pin-2"]), int(XY_A["mode-pin-3"])))
+        self.XY_motorB = HR8825(dir_pin=24, step_pin=18, enable_pin=4, mode_pins=(21, 22, 27))
 
-        XY_B = self.parser.get("XY-B")
-        self.XY_motorB = HR8825(int(XY_B["dir-pin"]), int(XY_B["step-pin"]), int(XY_B["enable-pin"]), (int(XY_B["mode-pin-1"]), int(XY_B["mode-pin-2"]), int(XY_B["mode-pin-3"])))
+        self.Z_motor = L298N(pins=(14, 15, 26, 8), enable=9)
 
-        Z = self.parser.get("Z")
-        self.Z_motor = L298N((int(Z["pin-1"]), int(Z["pin-2"]), int(Z["pin-3"]), int(Z["pin-4"])), int(Z["enable-pin"]))
+        self.endstops = EndStops(X_pin=6, Y_pin=25, Z_pin=23)
 
-        endstop_conf = self.parser.get("endstops")
-        self.endstops = EndStops(int(endstop_conf["X"]), int(endstop_conf["Y"]), int(endstop_conf["Z"]))
+        self.limits = Position(700, 290, 30)
 
-        limit_conf = self.parser.get("limits")
-        self.limits = Position(int(limit_conf["X"]), int(limit_conf["Y"]), int(limit_conf["Z"]))
-
-        self.calibration = self.parser.get("calibration")
+        self.calibration = [5, 3]
         
         self.center = self.limits.floor_div(2)
 
