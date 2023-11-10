@@ -4,7 +4,7 @@ from gantrycontrol.gantry import Gantry
 import json
 import os.path
 from gpiozero import AngularServo
-from RPi.GPIO import GPIO
+import RPi.GPIO as GPIO
 import time
 
 class PuzzleBuildingRobot(Gantry):
