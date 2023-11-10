@@ -15,7 +15,7 @@ class Gantry:
 
         self.endstops = EndStops(X_pin=6, Y_pin=25, Z_pin=23)
 
-        self.limits = Position(700, 290, 30)
+        self.limits = Position(700, 290, 35)
 
         self.calibration = [5, 3]
         
