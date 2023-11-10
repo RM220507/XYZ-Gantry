@@ -32,8 +32,8 @@ class PuzzleBuildingRobot(Gantry):
         with open(path, "r") as f:
             self.arrangement = json.load(f)
             
-        self.pickup_coordinates = Position(50, 140, 0)
-        self.fully_ext_dist2base = 0
+        self.pickup_coordinates = Position(60, 150, 0)
+        self.fully_ext_dist2base = 1
         self.piece_spacing = 20
         self.assembly_start_pos = Position_2D(650, 270)
         
